@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# pyenv
+.python-version
+
+# Environments
+.venv
+
+# mypy
+.mypy_cache
+.dmypy.json
+dmypy.json
+
+# ruff
+.ruff_cache
+
+# VSCode
+.vscode/
