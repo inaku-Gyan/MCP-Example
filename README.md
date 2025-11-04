@@ -7,7 +7,7 @@
 在根目录执行：
 
 ```bash
-uv run server.py
+uv run -m server
 ```
 
 ## 运行客户端示例
@@ -15,5 +15,5 @@ uv run server.py
 在根目录执行：
 
 ```bash
-uv run client.py
+uv run -m client
 ```
