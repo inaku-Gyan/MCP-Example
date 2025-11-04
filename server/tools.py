@@ -1,6 +1,7 @@
 import asyncio
 import random
 from datetime import datetime, timezone
+from typing import TypedDict
 
 from mcp import ServerSession
 from mcp.server.fastmcp import Context
@@ -48,31 +49,45 @@ async def long_running_task(
     return f"Task '{task_name}' completed"
 
 
-class NumberGuessingSchema(BaseModel):
+class NumberGuessingUserInputSchema(BaseModel):
     value: int
+    """The user's guessed number."""
 
 
-@mcp_server.tool()
+class NumberGuessingOutputSchema(TypedDict):
+    has_won: bool
+    """Indicates whether the user has won the game."""
+    guesses: list[int]
+    """List of user's guesses."""
+    answer: int
+    """The correct answer."""
+    max_allowed_attempts: int
+    """Maximum number of allowed attempts."""
+
+
+@mcp_server.tool(structured_output=True)
 async def number_guessing_game(
     ctx: Context[ServerSession, None],
     max_number: int = 100,
     max_attempts: int = 5,
-) -> str:
+) -> NumberGuessingOutputSchema:
     """A simple number guessing game using elicitation."""
     number_to_guess = random.randint(1, max_number)
     await ctx.info("Welcome to the Number Guessing Game!")
     await ctx.info(
         f"I'm thinking of a number between 1 and {max_number}. You have {max_attempts} attempts to guess it."
     )
+    guesses: list[int] = []
 
     for attempt in range(1, max_attempts + 1):
         response = await ctx.elicit(
             f"Attempt {attempt}: What's your guess?",
-            schema=NumberGuessingSchema,
+            schema=NumberGuessingUserInputSchema,
         )
 
         if response.action == "accept":
             guess = response.data.value
+            guesses.append(guess)
             if guess < number_to_guess:
                 await ctx.info("Too low!")
             elif guess > number_to_guess:
@@ -81,9 +96,19 @@ async def number_guessing_game(
                 await ctx.info(
                     f"Congratulations! You've guessed the number {number_to_guess}!"
                 )
-                return "You win!"
+                return {
+                    "answer": number_to_guess,
+                    "has_won": True,
+                    "max_allowed_attempts": max_attempts,
+                    "guesses": guesses,
+                }
 
     await ctx.info(
         f"Sorry, you've used all your attempts. The number was {number_to_guess}."
     )
-    return "Game over."
+    return {
+        "answer": number_to_guess,
+        "has_won": False,
+        "max_allowed_attempts": max_attempts,
+        "guesses": guesses,
+    }
