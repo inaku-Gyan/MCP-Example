@@ -22,15 +22,16 @@ def roll_a_dice(sides: int = 6) -> int:
     return random.randint(1, sides)
 
 
-@mcp_server.tool()
+@mcp_server.tool(structured_output=False)
 async def get_weather(city: str, time: datetime, ctx: Context) -> str:
     await ctx.info("Calling get_weather tool")
     await ctx.info(f"city: {city}; {type(time) = }, {time = }")
     await asyncio.sleep(0.1)  # Simulate network delay
+    print(f"Received get_weather call: city={city}, time={time}")
     return "Sunny with a chance of rain"
 
 
-@mcp_server.tool()
+@mcp_server.tool(structured_output=False)
 async def long_running_task(
     task_name: str, ctx: Context[ServerSession, None], steps: int = 5
 ) -> str:
