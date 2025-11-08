@@ -27,7 +27,7 @@ async def streaming_tool(ctx: Context[ServerSession, None]) -> Chunk:
             message=f" {i}",
         )
         await ctx.report_progress(
-            progress=i,
+            progress=i + 0.5,
             total=total,
             message=Chunk(
                 status="running",
@@ -35,7 +35,7 @@ async def streaming_tool(ctx: Context[ServerSession, None]) -> Chunk:
             ).model_dump_json(),
         )
         await ctx.report_progress(
-            progress=i,
+            progress=i + 0.75,
             total=total,
             message=Chunk(
                 status="running",
