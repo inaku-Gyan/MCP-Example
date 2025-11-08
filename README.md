@@ -1,4 +1,4 @@
-# TestMCP
+# MCP Example
 
 [MCP Python-SDK](https://github.com/modelcontextprotocol/python-sdk)
 
@@ -21,3 +21,7 @@ uv run -m server
 ```bash
 uv run -m client
 ```
+
+## 服务器配置
+
+参考 `config.py` 文件，可以修改服务器的地址和端口号。
