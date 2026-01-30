@@ -7,12 +7,12 @@ from config import MCP_SERVER_URL
 from .callbacks import logging_callback, progress_callback, elicitation_callback
 
 from mcp import ClientSession
-from mcp.client.streamable_http import streamablehttp_client
+from mcp.client.streamable_http import streamable_http_client
 
 
 async def main():
     # Connect to a streamable HTTP server
-    async with streamablehttp_client(MCP_SERVER_URL + "/mcp") as (
+    async with streamable_http_client(MCP_SERVER_URL + "/mcp") as (
         read_stream,
         write_stream,
         _,
